@@ -9,9 +9,9 @@ using namespace web::http;
 using namespace web;
 using namespace utility;
 
-void handle(http_request request) {
+void handle(http_request request, const std::string &&title) {
 	request.reply(status_codes::OK,
-		"<html><head></head><body><h1>Simple web server</h1></body></html>", "text/html; charset=UTF-8");
+		"<html><head></head><body><h1>"+ title + " web server</h1></body></html>", "text/html; charset=UTF-8");
 }
 
 int main()
@@ -21,7 +21,7 @@ int main()
 		.open()
 		.then([&listener]()
 		{
-			listener.support(methods::GET, std::bind(&handle, std::placeholders::_1));
+			listener.support(methods::GET, std::bind(&handle, std::placeholders::_1, "Simple"));
 		})
 		.wait();
 
