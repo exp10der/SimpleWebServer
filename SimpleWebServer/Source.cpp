@@ -9,6 +9,11 @@ using namespace web::http;
 using namespace web;
 using namespace utility;
 
+void handle(http_request request) {
+	request.reply(status_codes::OK,
+		"<html><head></head><body><h1>Simple web server</h1></body></html>", "text/html; charset=UTF-8");
+}
+
 int main()
 {
 	http_listener listener(U("http://localhost:3000"));
@@ -16,11 +21,7 @@ int main()
 		.open()
 		.then([&listener]()
 		{
-			listener.support(methods::GET, [](http_request request)
-			{
-				request.reply(status_codes::OK,
-					"<html><head></head><body><h1>Simple web server</h1></body></html>", "text/html; charset=UTF-8");
-			});
+			listener.support(methods::GET, std::bind(&handle, std::placeholders::_1));
 		})
 		.wait();
 
